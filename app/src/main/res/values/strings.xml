@@ -1,0 +1,14 @@
+<resources>
+    <string name="app_name">My applications</string>
+
+    <string name="name_title">Name</string>
+    <string name="package_title">Package</string>
+    <string name="check_sum_title">Check Sum</string>
+    <string name="version_title">Version</string>
+    <string name="na">n/a</string>
+    <string name="launch">Launch</string>
+    <string name="cant_read_apk">Can\'t check apk file</string>
+    <string name="calculating">calculating…</string>
+
+
+</resources>
