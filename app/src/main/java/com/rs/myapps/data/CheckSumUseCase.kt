@@ -27,16 +27,11 @@ class CheckSumUseCase(
                 val byteArray = ByteArray(1024)
                 var bytesCount: Int
 
-                var debCount = 0
-
                 FileInputStream(apkFile).use { fis ->
                     while ((fis.read(byteArray).also { bytesCount = it }) != -1) {
                         digest.update(byteArray, 0, bytesCount)
-                        if (++debCount % 10 ==0) Log.d(LTAG, "C= $debCount") //todo for debug only
                     }
                 }
-
-                Log.d(LTAG, "lenth= ${digest.digestLength}")
 
                 return@runCatching digest.digest()
             }

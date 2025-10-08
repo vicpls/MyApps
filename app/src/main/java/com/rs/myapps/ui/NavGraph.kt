@@ -9,7 +9,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.createGraph
 import androidx.navigation.toRoute
 import com.rs.myapps.ui.app_scr.AppScreen
-import com.rs.myapps.ui.main_scr.HomeScreen
+import com.rs.myapps.ui.home_scr.HomeScreen
 import kotlinx.serialization.Serializable
 
 @Serializable

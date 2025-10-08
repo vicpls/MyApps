@@ -1,4 +1,4 @@
-package com.rs.myapps.ui.main_scr
+package com.rs.myapps.ui.home_scr
 
 import android.content.Context
 import android.content.pm.PackageManager
@@ -7,6 +7,7 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.rs.myapps.LTAG
 import com.rs.myapps.data.AppInf
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -15,7 +16,7 @@ import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-const val LTAG = com.rs.myapps.LTAG + ".HomeScrVM"
+const val LTAG = LTAG + ".HomeScrVM"
 
 @HiltViewModel
 class HomeScreenVM @Inject constructor(@ApplicationContext context: Context) : ViewModel() {
@@ -46,7 +47,7 @@ class HomeScreenVM @Inject constructor(@ApplicationContext context: Context) : V
 
     fun onAppClick(index: Int){
         viewState.value.apps[index].apply {
-            Log.d(LTAG,"$name : $pack")
+            Log.d(com.rs.myapps.ui.home_scr.LTAG,"$name : $pack")
             viewModelScope.launch { _navEvent.emit(viewState.value.apps[index]) }
         }
 
