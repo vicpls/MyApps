@@ -3,12 +3,14 @@
 
     <string name="name_title">Name</string>
     <string name="package_title">Package</string>
-    <string name="check_sum_title">Check Sum</string>
+    <string name="check_sum_title">%1$s checksum</string>
+    <string name="alg_md5">MD5</string>
     <string name="version_title">Version</string>
     <string name="na">n/a</string>
     <string name="launch">Launch</string>
     <string name="cant_read_apk">Can\'t check apk file</string>
     <string name="calculating">calculating…</string>
+    <string name="cant_start">Can`t launch this application.</string>
 
 
 </resources>

@@ -1,5 +1,8 @@
 package com.rs.myapps.data
 
+import androidx.compose.runtime.Immutable
+
+@Immutable
 data class AppInf(
     val name: String,
     val version: String,
