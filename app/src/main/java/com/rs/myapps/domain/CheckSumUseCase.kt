@@ -1,17 +1,20 @@
-package com.rs.myapps.data
+package com.rs.myapps.domain
 
 import android.util.Log
+import com.rs.myapps.LTAG
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.io.File
 import java.io.FileInputStream
 import java.security.MessageDigest
+import javax.inject.Inject
 
 const val ALG_MD5 = "MD5"
-const val LTAG = com.rs.myapps.LTAG + ".CheckSumUS"
+const val LTAG = LTAG + ".CheckSumUS"
 
-class CheckSumUseCase(
+
+class CheckSumUseCase @Inject constructor(
     private val dispatcher: CoroutineDispatcher = Dispatchers.Default
 ) {
     suspend operator fun invoke(path: String, algorithm: String = ALG_MD5): Result<ByteArray> =

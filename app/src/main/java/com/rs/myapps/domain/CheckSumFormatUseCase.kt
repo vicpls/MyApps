@@ -1,4 +1,4 @@
-package com.rs.myapps.data
+package com.rs.myapps.domain
 
 class CheckSumFormatUseCase {
 

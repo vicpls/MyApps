@@ -16,12 +16,13 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
-import com.rs.myapps.data.AppInf
+import com.rs.myapps.domain.AppInf
 import com.rs.myapps.ui.main_scr.OnClickHandle
 import com.rs.myapps.ui.theme.MyAppsTheme
 
@@ -29,7 +30,10 @@ import com.rs.myapps.ui.theme.MyAppsTheme
 fun HomeScreen(vm: HomeScreenVM = hiltViewModel(),
                onAppNavigate: (String,String,String,String?)-> Unit ){
 
+    val context = LocalContext.current
+
     LaunchedEffect(Unit) {
+        vm.getAppList(context)
         vm.navEvent.collect {
             app -> onAppNavigate(
                 app.name,

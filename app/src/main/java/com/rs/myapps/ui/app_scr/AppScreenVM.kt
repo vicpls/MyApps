@@ -8,9 +8,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.rs.myapps.LTAG
 import com.rs.myapps.R
-import com.rs.myapps.data.CheckSumFormatUseCase
-import com.rs.myapps.data.CheckSumUseCase
 import com.rs.myapps.data.StringValue
+import com.rs.myapps.domain.ICheckSumUseCases
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.Dispatchers
@@ -18,7 +17,9 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class AppScreenVM @Inject constructor(@param:ApplicationContext val context: Context) : ViewModel() {
+class AppScreenVM @Inject constructor(@param:ApplicationContext val context: Context,
+    val checkSumUC: ICheckSumUseCases
+) : ViewModel() {
 
     var viewState : MutableState<AppViewState> = mutableStateOf(AppViewState())
         private set
@@ -39,11 +40,13 @@ class AppScreenVM @Inject constructor(@param:ApplicationContext val context: Con
 
         viewModelScope.launch(Dispatchers.Default) {
 
-            CheckSumUseCase()(sourceDir)
+//            CheckSumUseCase()(sourceDir)
+            checkSumUC.checkSum(sourceDir)
                 .onSuccess {
                     Log.d(LTAG, "success")
                     viewState.value = AppViewState(
-                        checksum = StringValue.DynamicString(CheckSumFormatUseCase()(it)),
+//                        checksum = StringValue.DynamicString(CheckSumFormatUseCase()(it)),
+                        checksum = StringValue.DynamicString(checkSumUC.checkSumFormat(it)),
                         checkSumInProcess = false
                     )
                 }

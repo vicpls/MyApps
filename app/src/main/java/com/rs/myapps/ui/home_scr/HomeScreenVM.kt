@@ -7,42 +7,36 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.rs.myapps.LTAG
-import com.rs.myapps.data.AppInf
+import com.rs.myapps.domain.AppInf
 import dagger.hilt.android.lifecycle.HiltViewModel
-import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-const val LTAG = LTAG + ".HomeScrVM"
+const val LTAG = com.rs.myapps.LTAG + ".HomeScrVM"
 
 @HiltViewModel
-class HomeScreenVM @Inject constructor(@ApplicationContext context: Context) : ViewModel() {
+class HomeScreenVM @Inject constructor() : ViewModel() {
 
-    var viewState : MutableState<MainViewState> = mutableStateOf(MainViewState())
+    var viewState : MutableState<HomeViewState> = mutableStateOf(HomeViewState())
         private set
 
     private val _navEvent = MutableSharedFlow<AppInf>()
     val navEvent = _navEvent.asSharedFlow()
 
-    init {
-        viewState.value = MainViewState(getAppList(context))
-    }
-
-    private fun getAppList(context: Context): List<AppInf> {
+    fun getAppList(context: Context) {
         val pm: PackageManager = context.packageManager
         val pack = pm.getInstalledPackages(0)
 
-        return pack.map{
+        viewState.value = HomeViewState(pack.map{
             AppInf(
                 name = it.applicationInfo?.loadLabel(pm)?.toString() ?: "?",
                 version = it.versionName ?: "?",
                 pack = it.packageName,
                 sourceDir = it.applicationInfo?.sourceDir
             )
-        }.sortedBy { it.name }
+        }.sortedBy { it.name })
     }
 
     fun onAppClick(index: Int){
@@ -50,12 +44,10 @@ class HomeScreenVM @Inject constructor(@ApplicationContext context: Context) : V
             Log.d(com.rs.myapps.ui.home_scr.LTAG,"$name : $pack")
             viewModelScope.launch { _navEvent.emit(viewState.value.apps[index]) }
         }
-
     }
 }
 
 
-
-data class MainViewState(
+data class HomeViewState(
     val apps: List<AppInf> = emptyList(),
 )

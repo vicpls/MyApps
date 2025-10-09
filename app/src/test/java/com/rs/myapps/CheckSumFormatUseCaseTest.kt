@@ -1,6 +1,6 @@
 package com.rs.myapps
 
-import com.rs.myapps.data.CheckSumFormatUseCase
+import com.rs.myapps.domain.CheckSumFormatUseCase
 import org.junit.Assert.assertEquals
 import org.junit.Test
 
