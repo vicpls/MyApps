@@ -25,6 +25,7 @@ import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.rs.myapps.domain.AppInf
 import com.rs.myapps.ui.main_scr.OnClickHandle
 import com.rs.myapps.ui.theme.MyAppsTheme
+import kotlinx.coroutines.flow.collectLatest
 
 @Composable
 fun HomeScreen(vm: HomeScreenVM = hiltViewModel(),
@@ -34,7 +35,7 @@ fun HomeScreen(vm: HomeScreenVM = hiltViewModel(),
 
     LaunchedEffect(Unit) {
         vm.getAppList(context)
-        vm.navEvent.collect {
+        vm.navEvent.collectLatest {
             app -> onAppNavigate(
                 app.name,
                 app.version,

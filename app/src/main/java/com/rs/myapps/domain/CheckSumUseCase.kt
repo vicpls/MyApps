@@ -11,7 +11,7 @@ import java.security.MessageDigest
 import javax.inject.Inject
 
 const val ALG_MD5 = "MD5"
-const val LTAG = LTAG + ".CheckSumUS"
+const val LTAG = com.rs.myapps.LTAG + ".CheckSumUS"
 
 
 class CheckSumUseCase @Inject constructor(
