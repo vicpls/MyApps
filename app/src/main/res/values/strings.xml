@@ -11,6 +11,7 @@
     <string name="cant_read_apk">Can\'t check apk file</string>
     <string name="calculating">calculating…</string>
     <string name="cant_start">Can`t launch this application.</string>
+    <string name="unknown_error">Unknown error</string>
 
 
 </resources>

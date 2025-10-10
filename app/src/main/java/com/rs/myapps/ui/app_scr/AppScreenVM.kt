@@ -11,15 +11,18 @@ import com.rs.myapps.LTAG
 import com.rs.myapps.R
 import com.rs.myapps.data.StringValue
 import com.rs.myapps.domain.ICheckSumUseCases
+import com.rs.myapps.domain.IoDispatcher
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
-import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class AppScreenVM @Inject constructor(@param:ApplicationContext val context: Context,
-    val checkSumUC: ICheckSumUseCases
+class AppScreenVM @Inject constructor(
+    @param:ApplicationContext val context: Context,
+    private val checkSumUC: ICheckSumUseCases,
+    @param:IoDispatcher private val corDispatcher: CoroutineDispatcher
 ) : ViewModel() {
 
     var viewState : MutableState<AppViewState> = mutableStateOf(AppViewState())
@@ -41,14 +44,12 @@ class AppScreenVM @Inject constructor(@param:ApplicationContext val context: Con
 
         viewState.value = AppViewState(checkSumInProcess = true)
 
-        viewModelScope.launch(Dispatchers.Default) {
+        viewModelScope.launch(corDispatcher) {
 
-//            CheckSumUseCase()(sourceDir)
             checkSumUC.checkSum(sourceDir)
                 .onSuccess {
                     Log.d(LTAG, "success")
                     viewState.value = AppViewState(
-//                        checksum = StringValue.DynamicString(CheckSumFormatUseCase()(it)),
                         checksum = StringValue.DynamicString(checkSumUC.checkSumFormat(it)),
                         checkSumInProcess = false
                     )
@@ -58,7 +59,10 @@ class AppScreenVM @Inject constructor(@param:ApplicationContext val context: Con
                     viewState.value = AppViewState(
                         checksum = StringValue.StringResource(R.string.na),
                         checkSumInProcess = false,
-                        errMsg = StringValue.DynamicString(it.message)
+                        errMsg = if (it.message != null) StringValue.DynamicString(it.message)
+                        else
+                            StringValue.StringResource(R.string.unknown_error)
+
                     )
                 }
 
