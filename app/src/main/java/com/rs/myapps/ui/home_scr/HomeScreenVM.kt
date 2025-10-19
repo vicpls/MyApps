@@ -1,60 +1,51 @@
 package com.rs.myapps.ui.home_scr
 
-import android.content.Context
-import android.content.pm.PackageManager
-import android.util.Log
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.rs.myapps.domain.AppInf
-import com.rs.myapps.domain.IoDispatcher
+import com.rs.myapps.domain.GetAppListUseCase
+import com.rs.myapps.domain.model.AppInf
+import com.rs.myapps.utils.StringValue
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-const val LTAG = com.rs.myapps.LTAG + ".HomeScrVM"
-
 @HiltViewModel
 class HomeScreenVM @Inject constructor(
-    @param:IoDispatcher val corDispatcher: CoroutineDispatcher
+    private val getAppListUC : GetAppListUseCase
 ) : ViewModel() {
 
-    var viewState : MutableState<HomeViewState> = mutableStateOf(HomeViewState())
+    var viewState : MutableState<HomeViewState> = mutableStateOf(HomeViewState.Loading)
         private set
 
     private val _navEvent = MutableSharedFlow<AppInf>()
     val navEvent = _navEvent.asSharedFlow()
 
-    fun getAppList(context: Context) {
-        val pm: PackageManager = context.packageManager
-
-        viewModelScope.launch(corDispatcher) {
-            val pack = pm.getInstalledPackages(0)
-
-            viewState.value = HomeViewState(pack.map {
-                AppInf(
-                    name = it.applicationInfo?.loadLabel(pm)?.toString() ?: "?",
-                    version = it.versionName ?: "?",
-                    pack = it.packageName,
-                    sourceDir = it.applicationInfo?.sourceDir
-                )
-            }.sortedBy { it.name })
+    fun getAppList() {
+        viewModelScope.launch {
+            viewState.value = HomeViewState.Success(
+                getAppListUC().sortedBy { it.name })
         }
     }
 
     fun onAppClick(index: Int){
-        viewState.value.apps[index].apply {
-            Log.d(LTAG,"$name : $pack")
-            viewModelScope.launch { _navEvent.emit(viewState.value.apps[index]) }
+        val currState = viewState.value
+        if (currState is HomeViewState.Success) {
+            currState.apps[index].apply {
+                viewModelScope.launch { _navEvent.emit(this@apply) }
+            }
         }
     }
 }
 
 
-data class HomeViewState(
-    val apps: List<AppInf> = emptyList(),
-)
+sealed interface HomeViewState {
+    object Loading : HomeViewState
+    class Success(val apps: List<AppInf>) : HomeViewState
+
+    @JvmInline
+    value class Error(val message: StringValue) : HomeViewState
+}

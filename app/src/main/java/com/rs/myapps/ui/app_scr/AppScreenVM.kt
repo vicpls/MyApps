@@ -9,9 +9,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.rs.myapps.LTAG
 import com.rs.myapps.R
-import com.rs.myapps.data.StringValue
 import com.rs.myapps.domain.ICheckSumUseCases
 import com.rs.myapps.domain.IoDispatcher
+import com.rs.myapps.utils.StringValue
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.CoroutineDispatcher
@@ -35,9 +35,9 @@ class AppScreenVM @Inject constructor(
 
         if (sourceDir==null){
             viewState.value = AppViewState(
-                checksum = StringValue.StringResource(R.string.na),
+                checksum = StringValue.ResId(R.string.na),
                 checkSumInProcess = false,
-                errMsg = StringValue.StringResource(R.string.cant_read_apk)
+                errMsg = StringValue.ResId(R.string.cant_read_apk)
             )
             return
         }
@@ -50,18 +50,18 @@ class AppScreenVM @Inject constructor(
                 .onSuccess {
                     Log.d(LTAG, "success")
                     viewState.value = AppViewState(
-                        checksum = StringValue.DynamicString(checkSumUC.checkSumFormat(it)),
+                        checksum = StringValue.Text(checkSumUC.checkSumFormat(it)),
                         checkSumInProcess = false
                     )
                 }
                 .onFailure {
                     Log.d(LTAG, "failure")
                     viewState.value = AppViewState(
-                        checksum = StringValue.StringResource(R.string.na),
+                        checksum = StringValue.ResId(R.string.na),
                         checkSumInProcess = false,
-                        errMsg = if (it.message != null) StringValue.DynamicString(it.message)
+                        errMsg = if (it.message != null) StringValue.Text(it.message!!)
                         else
-                            StringValue.StringResource(R.string.unknown_error)
+                            StringValue.ResId(R.string.unknown_error)
 
                     )
                 }
@@ -77,7 +77,7 @@ class AppScreenVM @Inject constructor(
             context.startActivity(intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK))
         } else {
             viewState.value = viewState.value
-                .copy(errMsg = StringValue.StringResource(R.string.cant_start))
+                .copy(errMsg = StringValue.ResId(R.string.cant_start))
         }
     }
 }

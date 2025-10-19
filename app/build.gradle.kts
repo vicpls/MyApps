@@ -69,7 +69,6 @@ dependencies {
     ksp(libs.hilt.android.compiler)
     implementation(libs.androidx.navigation.compose)
     implementation(libs.kotlin.serialization)
-//    implementation(libs.)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

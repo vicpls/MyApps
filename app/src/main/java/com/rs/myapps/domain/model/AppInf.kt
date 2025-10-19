@@ -1,4 +1,4 @@
-package com.rs.myapps.domain
+package com.rs.myapps.domain.model
 
 import androidx.compose.runtime.Immutable
 
