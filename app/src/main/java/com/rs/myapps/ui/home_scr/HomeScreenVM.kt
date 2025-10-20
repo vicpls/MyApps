@@ -34,9 +34,7 @@ class HomeScreenVM @Inject constructor(
     fun onAppClick(index: Int){
         val currState = viewState.value
         if (currState is HomeViewState.Success) {
-            currState.apps[index].apply {
-                viewModelScope.launch { _navEvent.emit(this@apply) }
-            }
+            viewModelScope.launch { _navEvent.emit(currState.apps[index]) }
         }
     }
 }
